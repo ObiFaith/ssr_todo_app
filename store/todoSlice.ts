@@ -39,9 +39,9 @@ const todoSlice = createSlice({
 	extraReducers: builder => {
 		builder
 			.addCase(loadTodosAsync.fulfilled, updateTodos)
-			.addCase(loadTodosAsync.rejected, handleActionError);
+			//.addCase(loadTodosAsync.rejected, handleActionError);
 	},
 });
 
 export default todoSlice.reducer;
-export const getTodos = (state: RootState) => state.todos;
+//export const getTodos = (state: RootState) => state.todos;
