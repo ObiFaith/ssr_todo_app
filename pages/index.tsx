@@ -17,9 +17,9 @@ export default function Home() {
 	});
 	const { isDarkMode, setDarkMode } = useTheme();
 
-	useEffect(() => {
+	/* useEffect(() => {
 		dispatch(loadTodosAsync());
-	}, [dispatch]);
+	}, [dispatch]); */
 
 	/* const itemsPerPage = 10;
 	const [pageNo, setPageNo] = useState(1);
