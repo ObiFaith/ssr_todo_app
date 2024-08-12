@@ -81,10 +81,18 @@ const todoSlice = createSlice({
 		builder
 			.addCase(loadTodosAsync.fulfilled, updateTodos)
 			.addCase(deleteTodoAsync.fulfilled, updateTodos)
-			.addCase(clearCompletedAsync.fulfilled, updateTodos)
-			.addCase(toggleCompletedAsync.fulfilled, updateTodos)
+			.addCase(clearCompletedAsync.fulfilled, (_, action) => {
+				if (Array.isArray(action.payload)) {
+					return action.payload;
+				}
+			})
+			.addCase(toggleCompletedAsync.fulfilled, (_, action) => {
+				if (Array.isArray(action.payload)) {
+					return action.payload;
+				}
+			})
 			.addCase(addTodoAsync.fulfilled, (state, action) => {
-				state.push(action.payload);
+				state.push(action.payload as Todo);
 			});
 	},
 });
