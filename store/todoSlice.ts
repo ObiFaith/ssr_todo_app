@@ -23,9 +23,12 @@ const makeRequest = async <T extends Todo | TodosArray>(
 	body?: Todo
 ): Promise<T> => {
 	try {
-		const { data } = body
-			? await Axios[method](url, body)
-			: await Axios[method](url);
+		const { data } =
+			method === 'delete'
+				? await Axios.delete(url, { data: body })
+				: body
+				? await Axios[method](url, body)
+				: await Axios[method](url);
 		return data as T;
 	} catch (error) {
 		console.error(`Error during ${method.toUpperCase()} method`, error);
@@ -36,16 +39,16 @@ const makeRequest = async <T extends Todo | TodosArray>(
 const updateTodos = (_: any, action: PayloadAction<TodosArray>) =>
 	action.payload;
 
+export const deleteTodoAsync = createAsyncThunk(
+	'todos/deleteTodoAsync',
+	async (id: string): Promise<TodosArray> =>
+		await makeRequest<TodosArray>('delete', `/todos`, { id })
+);
+
 export const loadTodosAsync = createAsyncThunk(
 	'todos/loadTodosAsync',
 	async (): Promise<TodosArray> =>
 		await makeRequest<TodosArray>('get', '/todos')
-);
-
-export const deleteTodoAsync = createAsyncThunk(
-	'todos/deleteTodoAsync',
-	async (id: string): Promise<TodosArray> =>
-		await makeRequest<TodosArray>('delete', `/todos`, { data: { id } })
 );
 
 export const clearCompletedAsync = createAsyncThunk(
