@@ -5,11 +5,11 @@ import {
 	icon_edit,
 	icon_edit_dark,
 } from '@/public';
-import useTheme from '@/store/useTheme';
 import Image from 'next/image';
+import useTheme from '@/store/useTheme';
+import { useAppDispatch } from '@/store';
+import { deleteTodoAsync, toggleCompletedAsync } from '@/store/todoSlice';
 import React, { Dispatch, SetStateAction } from 'react';
-import { useDispatch } from 'react-redux';
-/* import { deleteTodoAsync, toggleCompletedAsync } from '../redux/todoSlice'; */
 
 const TodoItem = ({
 	id,
@@ -24,7 +24,7 @@ const TodoItem = ({
 	completed: boolean;
 	setInput: Dispatch<SetStateAction<string>>;
 }) => {
-	// const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const { isDarkMode } = useTheme();
 	return (
 		<div
@@ -36,7 +36,7 @@ const TodoItem = ({
 		>
 			<div className="flex gap-3 max-sm:gap-2 items-center">
 				<div
-					/* onClick={() => dispatch(toggleCompletedAsync(id))} */
+					onClick={() => dispatch(toggleCompletedAsync(id))}
 					className={`border rounded-full cursor-pointer text-center ${
 						isDarkMode
 							? 'border-dark-blue-500 hover:border-dark-blue-300'
@@ -44,7 +44,14 @@ const TodoItem = ({
 					}
           ${completed ? 'accent-bg py-1 px-0.5' : 'p-2'}`}
 				>
-					{completed && <Image src={icon_check} alt="check icon" />}
+					{completed && (
+						<Image
+							width={12}
+							height={12}
+							src={icon_check}
+							alt="check icon"
+						/>
+					)}
 				</div>
 				<p className="max-sm:text-sm">{title}</p>
 			</div>
@@ -52,7 +59,7 @@ const TodoItem = ({
 				<Image
 					onClick={() => {
 						setInput(title);
-						/* dispatch(deleteTodoAsync(id)); */
+						dispatch(deleteTodoAsync(id));
 					}}
 					width={14}
 					height={14}
@@ -60,7 +67,7 @@ const TodoItem = ({
 					alt="edit icon"
 				/>
 				<Image
-					/* onClick={() => dispatch(deleteTodoAsync(id))} */
+					onClick={() => dispatch(deleteTodoAsync(id))}
 					width={14}
 					height={14}
 					src={isDarkMode ? icon_delete_dark : icon_delete}

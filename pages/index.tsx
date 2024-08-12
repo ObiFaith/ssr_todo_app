@@ -1,34 +1,31 @@
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { wrapper } from '@/store';
 import useTheme from '@/store/useTheme';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { GetServerSideProps } from 'next';
-import { loadTodosAsync } from '@/store/todoSlice';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, wrapper } from '@/store';
+import { addTodoAsync, getTodos, loadTodosAsync } from '@/store/todoSlice';
 import { Tabs, TodoList, Pagination } from '@/components';
 import { icon_add, icon_add_dark, icon_moon, icon_sun } from '@/public';
 
 export default function Home() {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [input, setInput] = useState('');
-	const todos = useSelector((state: { todos: [] }) => {
-		console.log(state);
-		return state.todos;
-	});
+	const todos = useSelector(getTodos);
 	const { isDarkMode, setDarkMode } = useTheme();
 
-	/* useEffect(() => {
+	useEffect(() => {
 		dispatch(loadTodosAsync());
-	}, [dispatch]); */
+	}, [dispatch]);
 
-	/* const itemsPerPage = 10;
+	const itemsPerPage = 10;
 	const [pageNo, setPageNo] = useState(1);
 	const startIndex = (pageNo - 1) * itemsPerPage;
 	const endIndex = startIndex + itemsPerPage;
 	const paginatedTodos = todos.slice(startIndex, endIndex);
 	const maxPageNo = Math.ceil(todos.length / itemsPerPage);
 	const completedTodos = paginatedTodos.filter(todo => todo.completed);
-	const activeTodos = paginatedTodos.filter(todo => !todo.completed); */
+	const activeTodos = paginatedTodos.filter(todo => !todo.completed);
 
 	return (
 		<>
@@ -80,7 +77,7 @@ export default function Home() {
 					<span
 						className="text-light-blue-400 cursor-pointer"
 						onClick={() => {
-							/* dispatch(addTodoAsync(input)); */
+							dispatch(addTodoAsync(input));
 							setInput('');
 						}}
 					>
@@ -95,7 +92,7 @@ export default function Home() {
 					</span>
 				</div>
 			</div>
-			{/* {todos.length > 0 ? (
+			{todos.length > 0 ? (
 				<>
 					<div className="px-8">
 						<Tabs
@@ -140,8 +137,8 @@ export default function Home() {
 					)}
 				</>
 			) : (
-				<div className="text-center py-8">Loading</div>
-			)} */}
+				<div className="text-center py-8">No todo</div>
+			)}
 		</>
 	);
 }

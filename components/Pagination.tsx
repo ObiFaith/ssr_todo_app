@@ -31,6 +31,8 @@ const Pagination = ({ pageNo, setPageNo, maxPageNo }: paginationProps) => {
 		<div className="flex gap-4 transition-all py-10 items-center justify-center cursor-pointer justify-self-end col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
 			{pageNo > 1 && (
 				<Image
+					width={10}
+					height={16}
 					src={arrow_left}
 					alt="arrow_left"
 					onClick={() =>
@@ -63,6 +65,8 @@ const Pagination = ({ pageNo, setPageNo, maxPageNo }: paginationProps) => {
 			</div>
 			{pageNo < maxPageNo && (
 				<Image
+					width={10}
+					height={16}
 					src={arrow_right}
 					alt="arrow_right"
 					onClick={() =>

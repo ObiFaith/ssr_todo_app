@@ -5,11 +5,13 @@ const TabList = ({
 	config,
 	className,
 	activeTab,
+	isCompleted,
 	setActiveTab,
 }: {
 	config: Array<{ header: string; component: JSX.Element }>;
 	className: string;
 	activeTab: number;
+	isCompleted: boolean;
 	setActiveTab: Dispatch<SetStateAction<number>>;
 }) => {
 	const { isDarkMode } = useTheme();
@@ -21,7 +23,7 @@ const TabList = ({
 					: 'text-light-blue-400 bg-white'
 			} ${className}`}
 		>
-			{config.map((entry, index) => (
+			{isCompleted && config.map((entry, index) => (
 				<p
 					onClick={() => setActiveTab(index)}
 					className={`${

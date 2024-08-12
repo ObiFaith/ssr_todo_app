@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 
-export const initalTodos = [
+export const todos = [
 	{
 		id: nanoid(),
 		title: 'Create custom api for my todo project',

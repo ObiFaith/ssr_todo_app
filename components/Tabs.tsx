@@ -1,9 +1,9 @@
 import TabList from './TabList';
-import { useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
 import useTheme from '@/store/useTheme';
-/* import { useSelector } from 'react-redux';
-import { clearCompletedAsync } from '../redux/todoSlice'; */
+import { useAppDispatch } from '@/store';
+import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { clearCompletedAsync, getTodos } from '@/store/todoSlice';
 
 const Tabs = ({
 	config,
@@ -12,13 +12,13 @@ const Tabs = ({
 	config: Array<{ header: string; component: JSX.Element }>;
 	length: number;
 }) => {
-	//const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const { isDarkMode } = useTheme();
+	const todos = useSelector(getTodos);
 	const [activeTab, setActiveTab] = useState(0);
-	/* const todos = useSelector(state => state.todos); */
 	const [isCompleted, setCompleted] = useState(false);
 
-	/* useEffect(() => {
+	useEffect(() => {
 		if (todos && todos.length > 0) {
 			const completedTodo = todos.find(todo => todo.completed);
 			if (completedTodo) {
@@ -27,7 +27,7 @@ const Tabs = ({
 				setCompleted(false);
 			}
 		}
-	}, [todos]); */
+	}, [todos]);
 
 	return (
 		<>
@@ -37,7 +37,11 @@ const Tabs = ({
 				}`}
 			>
 				{config[activeTab].component}
-				<div className="flex items-center cursor-pointer px-6 py-4 justify-between text-sm text-light-blue-400">
+				<div
+					className={`flex items-center transition-all cursor-pointer px-6 py-4 text-sm text-light-blue-400 ${
+						!isCompleted ? 'justify-center' : 'justify-between'
+					}`}
+				>
 					<p className="cursor-text">
 						{length} item{length > 1 ? 's' : ''} left
 					</p>
@@ -45,24 +49,26 @@ const Tabs = ({
 						activeTab={activeTab}
 						setActiveTab={setActiveTab}
 						config={config}
+						isCompleted={isCompleted}
 						className="max-sm:hidden"
 					/>
 					<p
 						className="hover:text-dark-blue-300"
-						/* onClick={() => dispatch(clearCompletedAsync())} */
+						onClick={() => dispatch(clearCompletedAsync())}
 					>
 						{isCompleted && 'Clear completed'}
 					</p>
 				</div>
 			</div>
-			{/* {todos.length > 0 && (
+			{todos.length > 0 && (
 				<TabList
 					activeTab={activeTab}
 					setActiveTab={setActiveTab}
 					config={config}
+					isCompleted={isCompleted}
 					className="cursor-pointer px-6 py-4 rounded-lg justify-center sm:hidden"
 				/>
-			)} */}
+			)}
 		</>
 	);
 };

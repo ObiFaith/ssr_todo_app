@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const Axios = axios.create({
-	baseURL: '/pages/api',
+	baseURL: '/api',
 });
 
 export default Axios;
