@@ -17,10 +17,15 @@ export type Todo = {
 type TodosArray = Array<Todo>;
 type AxiosMethods = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
+type DeleteTodoBody = { id: string };
+
+const updateTodos = (_: any, action: PayloadAction<TodosArray>) =>
+	action.payload;
+
 const makeRequest = async <T extends Todo | TodosArray>(
 	method: AxiosMethods,
 	url: string,
-	body?: Todo
+	body?: Todo | DeleteTodoBody
 ): Promise<T> => {
 	try {
 		const { data } =
@@ -35,9 +40,6 @@ const makeRequest = async <T extends Todo | TodosArray>(
 		throw new Error('Request failed');
 	}
 };
-
-const updateTodos = (_: any, action: PayloadAction<TodosArray>) =>
-	action.payload;
 
 export const deleteTodoAsync = createAsyncThunk(
 	'todos/deleteTodoAsync',
