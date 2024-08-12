@@ -1,10 +1,6 @@
 import Axios from './Axios';
 import { RootState } from '.';
-import {
-	createAsyncThunk,
-	createSlice,
-	PayloadAction,
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
 
 export type Todo = {
@@ -14,12 +10,8 @@ export type Todo = {
 };
 
 type TodosArray = Array<Todo>;
-type AxiosMethods = 'get' | 'post' | 'put' | 'delete' | 'patch';
-
 type DeleteTodoBody = { id: string };
-
-const updateTodos = (_: any, action: PayloadAction<TodosArray>) =>
-	action.payload;
+type AxiosMethods = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
 const makeRequest = async <T extends Todo | TodosArray>(
 	method: AxiosMethods,
@@ -75,7 +67,7 @@ export const addTodoAsync = createAsyncThunk(
 
 export const toggleCompletedAsync = createAsyncThunk(
 	'todos/toggleCompletedAsync',
-	async (id: string) => await makeRequest('patch', '/todos', { id })
+	async (id: string) => await makeRequest<Todo>('patch', '/todos', { id })
 );
 
 const todoSlice = createSlice({
@@ -84,21 +76,27 @@ const todoSlice = createSlice({
 	reducers: {},
 	extraReducers: builder => {
 		builder
-			.addCase(loadTodoAsync.fulfilled, updateTodos)
-			.addCase(loadTodosAsync.fulfilled, updateTodos)
-			.addCase(deleteTodoAsync.fulfilled, updateTodos)
+			.addCase(loadTodoAsync.fulfilled, (state, action) =>
+				state.filter(todo => todo.id === action.payload.id)
+			)
+			.addCase(loadTodosAsync.fulfilled, (_, action) => action.payload)
+			.addCase(deleteTodoAsync.fulfilled, (_, action) => action.payload)
 			.addCase(clearCompletedAsync.fulfilled, (_, action) => {
 				if (Array.isArray(action.payload)) {
 					return action.payload;
 				}
 			})
-			.addCase(toggleCompletedAsync.fulfilled, (_, action) => {
-				if (Array.isArray(action.payload)) {
-					return action.payload;
+			.addCase(toggleCompletedAsync.fulfilled, (state, action) => {
+				const updatedTodo = action.payload;
+				const index = state.findIndex(
+					todo => todo.id === updatedTodo.id
+				);
+				if (index !== -1) {
+					state[index] = updatedTodo;
 				}
 			})
 			.addCase(addTodoAsync.fulfilled, (state, action) => {
-				state.push(action.payload as Todo);
+				state.push(action.payload);
 			});
 	},
 });

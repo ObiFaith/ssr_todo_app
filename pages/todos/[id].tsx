@@ -18,6 +18,7 @@ const Todo = ({ initialTodo }: { initialTodo: Todo | null }) => {
 	const { isDarkMode } = useTheme();
 
 	useEffect(() => {
+    console.log(initialTodo)
 		if (!initialTodo) dispatch(loadTodoAsync(id as string));
 		else setTitle(initialTodo.title);
 	}, [dispatch, id, initialTodo]);
