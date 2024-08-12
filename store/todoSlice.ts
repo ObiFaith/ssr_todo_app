@@ -13,6 +13,7 @@ export type Todo = {
 	title: string;
 	completed: boolean;
 };
+
 type TodosArray = Array<Todo>;
 type AxiosMethods = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
@@ -44,7 +45,7 @@ export const loadTodosAsync = createAsyncThunk(
 export const deleteTodoAsync = createAsyncThunk(
 	'todos/deleteTodoAsync',
 	async (id: string): Promise<TodosArray> =>
-		await makeRequest<TodosArray>('delete', '/todos', { data: { id } })
+		await makeRequest<TodosArray>('delete', `/todos`, { data: { id } })
 );
 
 export const clearCompletedAsync = createAsyncThunk(
