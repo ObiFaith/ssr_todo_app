@@ -10,6 +10,7 @@ import useTheme from '@/store/useTheme';
 import { useAppDispatch } from '@/store';
 import { deleteTodoAsync, toggleCompletedAsync } from '@/store/todoSlice';
 import React, { Dispatch, SetStateAction } from 'react';
+import Link from 'next/link';
 
 const TodoItem = ({
 	id,
@@ -22,10 +23,11 @@ const TodoItem = ({
 	title: string;
 	className?: string;
 	completed: boolean;
-	setInput: Dispatch<SetStateAction<string>>;
+	setInput?: Dispatch<SetStateAction<string>>;
 }) => {
 	const dispatch = useAppDispatch();
 	const { isDarkMode } = useTheme();
+
 	return (
 		<div
 			className={`sm:px-6 p-4 flex gap-3 sm:gap-6 items-center justify-between border-b ${
@@ -34,7 +36,7 @@ const TodoItem = ({
 					: 'border-light-blue-300 text-light-blue-500'
 			} ${className}`}
 		>
-			<div className="flex gap-3 max-sm:gap-2 items-center">
+			<div className="flex gap-3 max-sm:gap-2 items-center w-full">
 				<div
 					onClick={() => dispatch(toggleCompletedAsync(id))}
 					className={`border rounded-full cursor-pointer text-center ${
@@ -53,12 +55,14 @@ const TodoItem = ({
 						/>
 					)}
 				</div>
-				<p className="max-sm:text-sm">{title}</p>
+				<Link href={`/todos/${id}`} className="max-sm:text-sm w-full">
+					{title}
+				</Link>
 			</div>
 			<div className="cursor-pointer items-center flex gap-2">
 				<Image
 					onClick={() => {
-						setInput(title);
+						if (setInput) setInput(title);
 						dispatch(deleteTodoAsync(id));
 					}}
 					width={14}

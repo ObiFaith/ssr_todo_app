@@ -4,7 +4,6 @@ import {
 	createAsyncThunk,
 	createSlice,
 	PayloadAction,
-	SerializedError,
 } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
 
@@ -47,6 +46,12 @@ export const deleteTodoAsync = createAsyncThunk(
 		await makeRequest<TodosArray>('delete', `/todos`, { id })
 );
 
+export const loadTodoAsync = createAsyncThunk(
+	'todos/loadTodoAsync',
+	async (id: string): Promise<Todo> =>
+		await makeRequest<Todo>('get', `/todos/${id}`)
+);
+
 export const loadTodosAsync = createAsyncThunk(
 	'todos/loadTodosAsync',
 	async (): Promise<TodosArray> =>
@@ -79,6 +84,7 @@ const todoSlice = createSlice({
 	reducers: {},
 	extraReducers: builder => {
 		builder
+			.addCase(loadTodoAsync.fulfilled, updateTodos)
 			.addCase(loadTodosAsync.fulfilled, updateTodos)
 			.addCase(deleteTodoAsync.fulfilled, updateTodos)
 			.addCase(clearCompletedAsync.fulfilled, (_, action) => {
